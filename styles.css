@@ -1,0 +1,95 @@
+body {
+  font-family: "Segoe UI", sans-serif;
+  margin: 0;
+  padding: 0;
+  background: #f4f7f6;
+}
+
+.top-bar {
+  display: flex;
+  align-items: center;
+  padding: 10px;
+  background: #0078d4;
+}
+
+#countrySelect {
+  padding: 8px;
+  margin-right: 10px;
+}
+
+#hrButton, #enButton {
+  padding: 8px 10px;
+  margin-right: 5px;
+  background: white;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.tabs {
+  display: flex;
+  background-color: #0078d4;
+  padding: 12px;
+}
+
+.tab {
+  padding: 10px 20px;
+  margin-right: 10px;
+  color: white;
+  background-color: #009cdd;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.tab.active {
+  background-color: #006bb3;
+}
+
+.content {
+  display: none;
+  padding: 20px;
+}
+
+.content.active {
+  display: block;
+}
+
+.category {
+  margin-bottom: 20px;
+}
+
+.category h3 {
+  cursor: pointer;
+  background: #eef3f7;
+  padding: 10px;
+  border-radius: 4px;
+  margin: 0;
+}
+
+.items {
+  display: none;
+  grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+  gap: 8px;
+  margin-top: 10px;
+}
+
+.category.active .items {
+  display: grid;
+}
+
+button {
+  padding: 10px 12px;
+  background: #0078d4;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.shopping-item {
+  background-color: #d92d20;
+}
+
+.shopping-item:hover {
+  background-color: #b81e10;
+}

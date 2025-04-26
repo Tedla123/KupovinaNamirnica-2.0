@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="hr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Popis za kupovinu</title>
+  <link rel="stylesheet" href="styles.css">
+  <script src="https://cdn.sheetjs.com/xlsx-0.19.2/package/dist/xlsx.full.min.js"></script>
+</head>
+<body>
+
+<div class="top-bar">
+  <select id="countrySelect"></select>
+  <button id="hrButton">🇭🇷</button>
+  <button id="enButton">🇬🇧</button>
+</div>
+
+<div class="tabs">
+  <div class="tab active" data-target="fruit">Odabir namirnica</div>
+  <div class="tab" data-target="shopping-list">Popis za kupovinu</div>
+  <div class="tab" data-target="shopping">Kupovina</div>
+</div>
+
+<div id="fruit" class="content active">
+  <h2 id="titleSelect">Odaberi namirnice</h2>
+  <div id="categoriesContainer"></div>
+</div>
+
+<div id="shopping-list" class="content">
+  <div id="selectedItemsList" class="items" style="margin-bottom: 20px;"></div>
+  <h2 id="titleShoppingList">Popis za kupovinu</h2>
+  <button onclick="saveShoppingList()" id="btnSave">Spremi trenutni popis</button>
+  <button onclick="exportShoppingList()" id="btnExport">Izvezi popis (.json)</button>
+  <input type="file" id="importFile" accept="application/json" onchange="importShoppingList(event)">
+</div>
+
+<div id="shopping" class="content">
+  <h2 id="titleShopping">Kupovina</h2>
+  <button onclick="startShopping()" id="btnStartShopping">Obavi kupnju</button>
+  <div id="shoppingItems"></div>
+</div>
+
+<script src="script.js"></script>
+</body>
+</html>
