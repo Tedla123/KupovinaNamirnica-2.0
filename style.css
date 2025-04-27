@@ -1,0 +1,203 @@
+body {
+  font-family: "Segoe UI", sans-serif;
+  margin: 0;
+  padding: 0;
+  background: #f4f7f6;
+}
+
+.tabs {
+  display: flex;
+  justify-content: space-around;
+  background: #f0f0f0;
+  border-bottom: 2px solid #ccc;
+  position: relative;
+}
+
+.tab {
+  flex: 1;
+  text-align: center;
+  padding: 12px 0;
+  cursor: pointer;
+  font-weight: 500;
+  border-bottom: 3px solid transparent;
+  color: #555;
+  background: none;
+}
+
+.tab.active {
+  color: #0078d4;
+  border-bottom: 3px solid #0078d4;
+  background: #ffffff;
+}
+
+.tab:hover {
+  background-color: #00b3ff;
+}
+
+.lang-buttons {
+  position: absolute;
+  right: 10px;
+  top: 8px;
+}
+
+.lang-buttons button {
+  background: white;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  margin-left: 5px;
+  cursor: pointer;
+  padding: 6px 8px;
+}
+
+.lang-buttons button:hover {
+  background: #e0e0e0;
+}
+
+.content {
+  display: none;
+  padding: 20px;
+  max-width: 900px;
+  margin: 0 auto;
+}
+
+.content.active {
+  display: block;
+}
+
+.category {
+  margin-bottom: 20px;
+}
+
+.category h3 {
+  cursor: pointer;
+  background: #eef3f7;
+  padding: 10px;
+  border-radius: 4px;
+  margin: 0;
+}
+
+.items {
+  display: none;
+  grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+  gap: 8px;
+  margin-top: 10px;
+  transition: all 0.3s ease-in-out;
+}
+
+.category.active .items {
+  display: grid;
+  background-color: #dce7f1;
+}
+
+button, .custom-file-label {
+  padding: 10px 12px;
+  background: #0078d4;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font: inherit;
+  display: inline-block;
+  margin: 5px 5px 5px 0;
+}
+
+button:hover:not(.shopping-item),
+.custom-file-label:hover {
+  background-color: #005ea8;
+}
+
+input[type="file"] {
+  display: none;
+}
+
+.shopping-item {
+  background-color: #d92d20;
+}
+
+.shopping-item:hover {
+  background-color: #b81e10;
+}
+
+.selected-item {
+  background-color: #a8e6a3 !important;
+  color: #1a471a !important;
+  border: 2px solid #4caf50;
+  font-weight: 600;
+}
+
+/* Dodatno: popup, settings i switch */
+.popup {
+  background: white;
+  border: 2px solid #0078d4;
+  border-radius: 8px;
+  padding: 20px;
+  max-width: 300px;
+  margin: 20px auto;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+}
+
+.popup-message {
+  position: fixed;
+  top: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  background-color: #0078d4;
+  color: white;
+  padding: 12px 20px;
+  border-radius: 8px;
+  font-weight: 500;
+  opacity: 0;
+  transition: opacity 0.5s ease-in-out;
+  z-index: 9999;
+}
+
+.popup-message.show {
+  opacity: 1;
+}
+
+/* iOS switch stil */
+.switch {
+  position: relative;
+  display: inline-block;
+  width: 50px;
+  height: 28px;
+  margin-left: 10px;
+}
+
+.switch input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.slider {
+  position: absolute;
+  cursor: pointer;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: #ccc;
+  transition: .4s;
+  border-radius: 34px;
+}
+
+.slider:before {
+  position: absolute;
+  content: "";
+  height: 20px;
+  width: 20px;
+  left: 4px;
+  bottom: 4px;
+  background-color: white;
+  transition: .4s;
+  border-radius: 50%;
+}
+
+input:checked + .slider {
+  background-color: #4caf50;
+}
+
+input:checked + .slider:before {
+  transform: translateX(22px);
+}

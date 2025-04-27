@@ -1,43 +1,75 @@
 <!DOCTYPE html>
 <html lang="hr">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Popis za kupovinu</title>
-  <link rel="stylesheet" href="styles.css">
-  <script src="https://cdn.sheetjs.com/xlsx-0.19.2/package/dist/xlsx.full.min.js"></script>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Popis za kupovinu</title>
+<link rel="stylesheet" href="style.css" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+<script src="https://cdn.sheetjs.com/xlsx-0.19.2/package/dist/xlsx.full.min.js"></script>
 </head>
 <body>
 
-<div class="top-bar">
-  <select id="countrySelect"></select>
-  <button id="hrButton">🇭🇷</button>
-  <button id="enButton">🇬🇧</button>
-</div>
+<div id="popupMessage" class="popup-message" style="display: none;"></div>
 
 <div class="tabs">
   <div class="tab active" data-target="fruit">Odabir namirnica</div>
   <div class="tab" data-target="shopping-list">Popis za kupovinu</div>
   <div class="tab" data-target="shopping">Kupovina</div>
+  <div class="tab" data-target="settings">Postavke</div>
 </div>
 
 <div id="fruit" class="content active">
-  <h2 id="titleSelect">Odaberi namirnice</h2>
   <div id="categoriesContainer"></div>
 </div>
 
 <div id="shopping-list" class="content">
-  <div id="selectedItemsList" class="items" style="margin-bottom: 20px;"></div>
-  <h2 id="titleShoppingList">Popis za kupovinu</h2>
-  <button onclick="saveShoppingList()" id="btnSave">Spremi trenutni popis</button>
-  <button onclick="exportShoppingList()" id="btnExport">Izvezi popis (.json)</button>
+  <button onclick="saveShoppingList()" title="Spremi trenutni popis"><i class="fas fa-file-alt"></i></button>
+  <button onclick="exportShoppingList()" title="Izvezi popis"><i class="fas fa-arrow-down"></i></button>
+  <button onclick="clearShoppingList()" title="Obriši popis"><i class="fas fa-trash"></i></button>
+  <label for="importFile" class="custom-file-label" title="Uvezi popis"><i class="fas fa-arrow-up"></i></label>
   <input type="file" id="importFile" accept="application/json" onchange="importShoppingList(event)">
+  <div id="selectedCategoriesView"></div>
+  <div id="savedShoppingLists" style="margin-top: 20px;"></div>
 </div>
 
 <div id="shopping" class="content">
-  <h2 id="titleShopping">Kupovina</h2>
-  <button onclick="startShopping()" id="btnStartShopping">Obavi kupnju</button>
+  <button onclick="startShopping()">Obavi kupnju</button>
+  <div id="shoppingPopup" class="popup" style="display: none;"></div>
   <div id="shoppingItems"></div>
+</div>
+
+<div id="settings" class="content">
+  <h2>Postavke aplikacije</h2>
+
+  <select id="countrySelect" style="margin-bottom: 20px;"></select>
+
+  <div class="lang-buttons">
+    <button id="hrButton">🇭🇷</button>
+    <button id="enButton">🇬🇧</button>
+  </div>
+
+  <div id="settingsContainer">
+    <label class="settings-toggle-label">
+      Swipe između tabova
+      <label class="switch">
+        <input type="checkbox" id="swipeToggle">
+        <span class="slider"></span>
+      </label>
+    </label>
+
+    <label class="settings-toggle-label">
+      Prikaži vertikalni scroll bar
+      <input type="checkbox" id="verticalScrollToggle">
+    </label>
+
+    <label class="settings-toggle-label">
+      Prikaži horizontalni scroll bar
+      <input type="checkbox" id="horizontalScrollToggle">
+    </label>
+  </div>
+
+  <button onclick="saveSettings()">Spremi postavke</button>
 </div>
 
 <script src="script.js"></script>

@@ -4,14 +4,15 @@ let translations = {};
 let selectedItems = {};
 let currentLanguage = "HR";
 
-// Automatski učitaj Excel kad se stranica učita
+// Automatski učitavanje Excela
 window.onload = async function () {
     await loadExcelData();
     setupTabs();
     setupLanguageButtons();
+    loadSettings();
 };
 
-// Učitavanje Excela
+// Funkcija za učitavanje Excela
 async function loadExcelData() {
     const response = await fetch('namirnice_po_drzavama.xlsx');
     const arrayBuffer = await response.arrayBuffer();
@@ -21,7 +22,7 @@ async function loadExcelData() {
     loadTranslations();
 }
 
-// Napuni dropdown s državama
+// Popunjavanje dropdowna država
 function populateCountryDropdown() {
     const select = document.getElementById('countrySelect');
     workbook.SheetNames.forEach(sheetName => {
@@ -37,7 +38,6 @@ function populateCountryDropdown() {
         loadCountryData(select.value);
     });
 
-    // Odmah učitaj prvu državu
     if (select.options.length > 0) {
         select.selectedIndex = 0;
         loadCountryData(select.value);
@@ -96,8 +96,13 @@ function renderCategories() {
 
             const btn = document.createElement("button");
             btn.textContent = translatedItem;
+            if (selectedItems[item]) {
+                btn.classList.add("selected-item");
+            }
             btn.onclick = () => {
                 selectedItems[item] = (selectedItems[item] || 0) + 1;
+                btn.classList.add("selected-item");
+                renderSelectedItems();
             };
             itemDiv.appendChild(btn);
         });
@@ -107,7 +112,7 @@ function renderCategories() {
     }
 }
 
-// Gumb za promjenu jezika
+// Postavke gumbića za jezik
 function setupLanguageButtons() {
     document.getElementById('hrButton').addEventListener('click', () => {
         currentLanguage = "HR";
@@ -120,7 +125,7 @@ function setupLanguageButtons() {
     });
 }
 
-// Tabs prebacivanje
+// Postavljanje tabova
 function setupTabs() {
     document.querySelectorAll(".tab").forEach(tab => {
         tab.addEventListener("click", function () {
@@ -132,13 +137,53 @@ function setupTabs() {
     });
 }
 
-// Spremanje popisa
+// Spremljene funkcije
 function saveShoppingList() {
-    localStorage.setItem("selectedShoppingList", JSON.stringify(selectedItems));
-    alert("Popis spremljen!");
+    if (Object.keys(selectedItems).length === 0) {
+        alert("Popis je prazan!");
+        return;
+    }
+
+    const savedContainer = document.getElementById("savedShoppingLists");
+    const today = new Date();
+    const dateStr = today.toLocaleDateString("hr-HR");
+    const baseTitle = `${dateStr} Popis za kupovinu`;
+    let title = baseTitle;
+    let counter = 1;
+
+    while ([...savedContainer.querySelectorAll("h4")].some(h => h.textContent === title)) {
+        counter++;
+        title = `${baseTitle} (${counter})`;
+    }
+
+    const wrapper = document.createElement("div");
+    const titleEl = document.createElement("h4");
+    titleEl.textContent = title;
+    titleEl.onclick = () => {
+        listDiv.style.display = listDiv.style.display === "none" ? "block" : "none";
+    };
+    titleEl.style.cursor = "pointer";
+    titleEl.style.color = "#0078d4";
+
+    const listDiv = document.createElement("div");
+    listDiv.style.display = "none";
+    listDiv.style.marginTop = "10px";
+
+    for (let item in selectedItems) {
+        const p = document.createElement("p");
+        p.textContent = `• ${item} x ${selectedItems[item]}`;
+        listDiv.appendChild(p);
+    }
+
+    wrapper.appendChild(titleEl);
+    wrapper.appendChild(listDiv);
+    wrapper.style.marginBottom = "15px";
+    savedContainer.appendChild(wrapper);
+
+    selectedItems = {};
+    renderSelectedItems();
 }
 
-// Izvoz popisa
 function exportShoppingList() {
     const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(selectedItems));
     const dlAnchor = document.createElement("a");
@@ -148,15 +193,15 @@ function exportShoppingList() {
     dlAnchor.click();
 }
 
-// Uvoz popisa
 function importShoppingList(event) {
     const file = event.target.files[0];
     if (!file) return;
     const reader = new FileReader();
-    reader.onload = function(e) {
+    reader.onload = function (e) {
         try {
             const data = JSON.parse(e.target.result);
             Object.assign(selectedItems, data);
+            renderSelectedItems();
             alert("Popis je uvezen!");
         } catch {
             alert("Neispravna datoteka!");
@@ -165,17 +210,79 @@ function importShoppingList(event) {
     reader.readAsText(file);
 }
 
-// Pokretanje kupovine
+function clearShoppingList() {
+    if (confirm("Jesi li siguran/na da želiš obrisati cijeli popis?")) {
+        selectedItems = {};
+        renderSelectedItems();
+    }
+}
+
 function startShopping() {
     const container = document.getElementById("shoppingItems");
     container.innerHTML = "";
-    const saved = JSON.parse(localStorage.getItem("selectedShoppingList")) || {};
-    Object.assign(selectedItems, saved);
 
     for (let item in selectedItems) {
         const btn = document.createElement("button");
         btn.textContent = `${item} - ${selectedItems[item]}`;
         btn.className = "shopping-item";
         container.appendChild(btn);
+    }
+}
+
+function renderSelectedItems() {
+    const container = document.getElementById("selectedCategoriesView");
+    if (!container) return;
+
+    container.innerHTML = "";
+
+    for (let item in selectedItems) {
+        const btn = document.createElement("button");
+        btn.textContent = `${item} - ${selectedItems[item]}`;
+        btn.className = "shopping-item";
+        container.appendChild(btn);
+    }
+}
+
+// Scroll i swipe postavke
+function loadSettings() {
+    const swipeEnabled = localStorage.getItem("swipeEnabled") === "true";
+    const verticalScroll = localStorage.getItem("scrollY") !== "false";
+    const horizontalScroll = localStorage.getItem("scrollX") !== "false";
+
+    document.getElementById("swipeToggle").checked = swipeEnabled;
+    document.getElementById("verticalScrollToggle").checked = verticalScroll;
+    document.getElementById("horizontalScrollToggle").checked = horizontalScroll;
+
+    applyScrollSettings();
+}
+
+function applyScrollSettings() {
+    const body = document.body;
+    body.style.overflowY = document.getElementById("verticalScrollToggle").checked ? 'scroll' : 'hidden';
+    body.style.overflowX = document.getElementById("horizontalScrollToggle").checked ? 'scroll' : 'hidden';
+}
+
+// Swipe podrška
+let touchStartX = 0;
+let touchEndX = 0;
+
+document.addEventListener("touchstart", (e) => {
+    touchStartX = e.changedTouches[0].screenX;
+}, false);
+
+document.addEventListener("touchend", (e) => {
+    touchEndX = e.changedTouches[0].screenX;
+    handleSwipe();
+}, false);
+
+function handleSwipe() {
+    const tabs = Array.from(document.querySelectorAll(".tab"));
+    const activeTab = tabs.findIndex((tab) => tab.classList.contains("active"));
+
+    if (touchEndX < touchStartX - 50 && activeTab < tabs.length - 1) {
+        tabs[activeTab + 1].click();
+    }
+    if (touchEndX > touchStartX + 50 && activeTab > 0) {
+        tabs[activeTab - 1].click();
     }
 }
