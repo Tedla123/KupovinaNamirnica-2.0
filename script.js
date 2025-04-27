@@ -57,8 +57,48 @@ function loadCountryData(countryName) {
         categories[category].push(item);
     });
 
-    renderCategories();
+    function renderCategories() {
+    const container = document.getElementById("categoriesContainer");
+    container.innerHTML = "";
+
+    for (let [category, items] of Object.entries(categories)) {
+        const translatedCategory = currentLanguage === "HR" ? category : (translations[category] || category);
+
+        const catDiv = document.createElement("div");
+        catDiv.className = "category";
+
+        const catHeader = document.createElement("h3");
+        catHeader.textContent = translatedCategory;
+        catHeader.onclick = () => {
+            document.querySelectorAll(".category").forEach(c => c.classList.remove("active"));
+            catDiv.classList.add("active");
+        };
+        catDiv.appendChild(catHeader);
+
+        const itemDiv = document.createElement("div");
+        itemDiv.className = "items";
+
+        items.forEach(item => {
+            const translatedItem = currentLanguage === "HR" ? item : (translations[item] || item);
+
+            const btn = document.createElement("button");
+            btn.textContent = translatedItem;
+            if (selectedItems[item]) {
+                btn.classList.add("selected-item");
+            }
+            btn.onclick = () => {
+                selectedItems[item] = (selectedItems[item] || 0) + 1;
+                btn.classList.add("selected-item");
+                renderSelectedItems();
+            };
+            itemDiv.appendChild(btn);
+        });
+
+        catDiv.appendChild(itemDiv);
+        container.appendChild(catDiv);
+    }
 }
+
 
 // Učitavanje prijevoda
 function loadTranslations() {
