@@ -57,7 +57,7 @@ function loadCountryData(countryName) {
         categories[category].push(item);
     });
 
-    function renderCategories() {
+function renderCategories() {
     const container = document.getElementById("categoriesContainer");
     container.innerHTML = "";
 
@@ -69,10 +69,12 @@ function loadCountryData(countryName) {
 
         const catHeader = document.createElement("h3");
         catHeader.textContent = translatedCategory;
-        catHeader.onclick = () => {
+        catHeader.addEventListener('click', function () {
+            // Prvo zatvori sve kategorije
             document.querySelectorAll(".category").forEach(c => c.classList.remove("active"));
+            // Otvori samo kliknutu kategoriju
             catDiv.classList.add("active");
-        };
+        });
         catDiv.appendChild(catHeader);
 
         const itemDiv = document.createElement("div");
@@ -98,6 +100,7 @@ function loadCountryData(countryName) {
         container.appendChild(catDiv);
     }
 }
+
 
 
 // Učitavanje prijevoda
